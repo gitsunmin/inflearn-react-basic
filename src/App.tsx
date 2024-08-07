@@ -2,6 +2,7 @@ import './App.css'
 import { Example_useEffect } from './components/examples/Example_useEffect'
 import { Example_useRef } from './components/examples/Example_useRef'
 import { Example_useState } from './components/examples/Example_useState'
+import { Example_useTransition } from './components/examples/Example_useTransition'
 
 function App() {
 
@@ -27,8 +28,10 @@ function App() {
         <p>아래 예제는 useRef 함수를 사용하여 input 필드에 포커싱을 주는 예제입니다.</p>
         <Example_useRef />
       </section>
-
+      <hr />
       <section>
+        <h2>useTransition</h2>
+        <Example_useTransition />
       </section>
     </>
   )
