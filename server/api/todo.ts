@@ -1,56 +1,113 @@
 const TodoList = [
     {
-        id: 'Todo_1',
+        id: Math.random().toString(36).slice(2),
         title: '첫 번째 할 일',
         checked: false,
     },
     {
-        id: 'Todo_2',
+        id: Math.random().toString(36).slice(2),
         title: '두 번째 할 일',
         checked: true,
     },
     {
-        id: 'Todo_3',
+        id: Math.random().toString(36).slice(2),
         title: '세 번째 할 일',
         checked: false,
     }
 ]
 
-export const getTodoList = () => TodoList;
+type Payload = {
+    pathname: string;
+    req: Request;
+}
 
-export const createTodo = (title: string) => {
-    const Todo = {
+export const getTodoList = (option: ResponseInit) => () => {
+    console.log('GET /api/todo/list');
+
+    return new Response(JSON.stringify(TodoList), option);
+};
+
+export const createTodo = (option: ResponseInit) => async (payload: Payload) => {
+    const { req } = payload;
+    const { title } = await req.json() as { title: string };
+
+    console.log('POST /api/todo/create', title);
+
+    const todo = {
         id: Math.random().toString(36).slice(2),
         title,
         checked: false,
     }
-    TodoList.push(Todo);
-    return Todo;
+    TodoList.push(todo);
+    return new Response(JSON.stringify(todo), option);
 }
 
-export const updateTodoTitle = (id: string, title: string) => {
-    const TodoIndex = TodoList.findIndex(item => item.id === id);
-    if (TodoIndex === -1) throw new Error('Todo not found');
+export const updateTodoTitle = (option: ResponseInit) => async (payload: Payload) => {
+    const { pathname, req } = payload;
+    const id = pathname.split('/').pop();
+    const { title } = await req.json() as { title: string };
 
-    TodoList[TodoIndex].title = title;
+    console.log('PUT /api/todo/update', id, title);
 
-    return TodoList[TodoIndex];
+    if (id) {
+        const TodoIndex = TodoList.findIndex(item => item.id === id);
+        if (TodoIndex === -1) throw new Error('Todo not found');
+
+        const todo = TodoList[TodoIndex];
+        todo.title = title;
+
+        return new Response(JSON.stringify(todo), option);
+    } else {
+        return new Response("400 Bad Request", {
+            status: 400,
+            ...option,
+        });
+    }
 }
 
-export const checkTodo = (id: string, checked: boolean) => {
-    const TodoIndex = TodoList.findIndex(item => item.id === id);
-    if (TodoIndex === -1) throw new Error('Todo not found');
+export const checkTodo = (option: ResponseInit) => async (payload: Payload) => {
+    const { pathname, req } = payload;
+    const id = pathname.split('/').pop();
 
-    TodoList[TodoIndex].checked = checked;
+    const { checked } = await req.json() as { checked: boolean };
 
-    return TodoList[TodoIndex];
+    console.log('PUT /api/todo/check', id, checked);
+
+    if (id) {
+        const TodoIndex = TodoList.findIndex(item => item.id === id);
+
+        if (TodoIndex === -1) throw new Error('Todo not found');
+
+        const todo = TodoList[TodoIndex];
+
+        todo.checked = checked;
+
+        return new Response(JSON.stringify(todo), option);
+    } else {
+        return new Response("400 Bad Request", {
+            status: 400,
+            ...option,
+        });
+    }
 }
 
-export const deleteTodo = (id: string) => {
-    const TodoIndex = TodoList.findIndex(item => item.id === id);
-    if (TodoIndex === -1) throw new Error('Todo not found');
+export const deleteTodo = (option: ResponseInit) => (payload: Payload) => {
+    const { pathname } = payload;
+    const id = pathname.split('/').pop();
 
-    TodoList.splice(TodoIndex, 1);
+    console.log('DELETE /api/todo/delete', id);
 
-    return TodoList;
+    if (id) {
+        const TodoIndex = TodoList.findIndex(item => item.id === id);
+        if (TodoIndex === -1) throw new Error('Todo not found');
+
+        const [todo] = TodoList.splice(TodoIndex, 1);
+
+        return new Response(JSON.stringify(todo), option);
+    } else {
+        return new Response("400 Bad Request", {
+            status: 400,
+            ...option,
+        });
+    }
 }
