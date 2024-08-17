@@ -16,10 +16,16 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const TodoLazyImport = createFileRoute('/todo')()
 const HooksLazyImport = createFileRoute('/hooks')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const TodoLazyRoute = TodoLazyImport.update({
+  path: '/todo',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/todo.lazy').then((d) => d.Route))
 
 const HooksLazyRoute = HooksLazyImport.update({
   path: '/hooks',
@@ -49,6 +55,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HooksLazyImport
       parentRoute: typeof rootRoute
     }
+    '/todo': {
+      id: '/todo'
+      path: '/todo'
+      fullPath: '/todo'
+      preLoaderRoute: typeof TodoLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -57,6 +70,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   HooksLazyRoute,
+  TodoLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -68,7 +82,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/hooks"
+        "/hooks",
+        "/todo"
       ]
     },
     "/": {
@@ -76,6 +91,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/hooks": {
       "filePath": "hooks.lazy.tsx"
+    },
+    "/todo": {
+      "filePath": "todo.lazy.tsx"
     }
   }
 }
