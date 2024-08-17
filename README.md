@@ -10,7 +10,7 @@
 - 기본 Hooks 사용법
 
 2. Todo List 만들기 with React
-- 라이브러리 설치 (TailwindCSS, Tanstack Router)
+- 라이브러리 설치 (TailwindCSS, Tanstack Router, ts-pattern)
 - Todo Component 작성
 - Todo 생성, 수정, 삭제
 
