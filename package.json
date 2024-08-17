@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "mock": "bun server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -12,7 +13,8 @@
   "dependencies": {
     "@tanstack/react-router": "^1.47.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "ts-pattern": "^5.3.1"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.47.1",
@@ -29,6 +31,8 @@
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.2.2",
-    "vite": "^5.3.4"
-  }
+    "vite": "^5.3.4",
+    "@types/bun": "latest"
+  },
+  "module": "server/index.ts"
 }

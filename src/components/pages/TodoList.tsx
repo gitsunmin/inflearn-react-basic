@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Todo } from '../todo';
 
 
@@ -8,27 +8,18 @@ type TodoItem = {
     checked: boolean;
 }
 
-const items: Array<TodoItem> = [
-    {
-        id: 'Todo_1',
-        title: '첫 번째 할 일',
-        checked: false,
-    },
-    {
-        id: 'Todo_2',
-        title: '두 번째 할 일',
-        checked: true,
-    },
-    {
-        id: 'Todo_3',
-        title: '세 번째 할 일',
-        checked: false,
-    }
-]
-
 export const TodoList = () => {
-    const [todoList, setTodoList] = useState(items);
+    const [todoList, setTodoList] = useState<Array<TodoItem>>([]);
     const [editModeTodo, setEditModeTodo] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch('http://localhost:3200/api/todo/list')
+            .then(res => res.json())
+            .then(data => {
+                console.log('data: ', data);
+                setTodoList(data);
+            });
+    }, [])
 
     const handleCheck = (id: string) => (checked: boolean) => setTodoList((todoList) => todoList.map(item => {
         if (item.id === id) {
