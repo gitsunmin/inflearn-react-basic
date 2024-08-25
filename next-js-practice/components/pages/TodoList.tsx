@@ -1,7 +1,8 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { Todo } from '../Todo';
 import { MockAPI } from '../../utils/mock';
-
 
 type TodoItem = {
     id: string;
@@ -53,7 +54,6 @@ export const TodoList = () => {
     const handleEditTitle = (id: string) => (title: string) => {
         setEditModeTodo(null);
         MockAPI.updateTodoTitle(id, title).then(data => {
-            console.log('data:', data);
             setTodoList((todoList) => {
                 return todoList.map(item => {
                     if (item.id === data.id) return data;
@@ -65,9 +65,10 @@ export const TodoList = () => {
 
     return (<div>
         <section className='flex gap-y-[12px] flex-col'>
-            <h1 className='text-[white] text-2xl'>Todo List</h1>
+            <h1 className='text-[white] text-2xl'>Todo List with Next.js</h1>
             <input
                 type="text"
+                className='text-black'
                 value={newTodoTitle}
                 onChange={(e) => setNewTodoTitle(e.target.value)}
                 onKeyDown={(e) => {
